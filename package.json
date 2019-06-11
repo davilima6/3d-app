@@ -1,0 +1,13 @@
+{
+  "name": "3d-app",
+  "version": "1.0.0",
+  "description": "Exercise with Next/React 16.8 (Hooks) and Three.js",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "",
+  "license": "ISC"
+}
