@@ -3,37 +3,50 @@ import {
   BoxGeometry,
   Mesh,
   MeshBasicMaterial,
+  FBXLoader,
   PerspectiveCamera,
   Scene,
+  Vector3,
   WebGLRenderer,
 } from 'three';
+
+import * as THREE from 'three';
+import OBJLoader from 'three-obj-loader';
+// import FBXLoader from 'three-fbx-loader';
+
+OBJLoader(THREE);
+
+const OBJ = '/static/character.obj';
 
 function useThreeScene(mountPoint) {
   const [renderer, setRenderer] = useState();
   const [camera, setCamera] = useState();
   const [scene, setScene] = useState();
+  const [character, setCharacter] = useState();
   const [cube, setCube] = useState();
+  const [loader, setLoader] = useState();
   const [frameId, setFrameId] = useState();
 
   const start = () => {
-    debugger;
     if (frameId) {
       return;
     }
-    const newFrame = requestAnimationFrame(animate);
+    const newFrame = window.requestAnimationFrame(animate);
 
     setFrameId(newFrame);
   };
 
   const stop = () => {
-    cancelAnimationFrame(frameId);
+    window.cancelAnimationFrame(frameId);
   };
 
   const animate = () => {
-    debugger;
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
-    setFrameId(requestAnimationFrame(animate));
+    // character.rotation.x += 0.01;
+    // character.rotation.y += 0.01;
+    const frameId = setFrameId(window.requestAnimationFrame(animate));
+
     renderScene();
   };
 
@@ -59,7 +72,7 @@ function useThreeScene(mountPoint) {
     // Add renderer
     const newRenderer = new WebGLRenderer({ antialias: true });
 
-    newRenderer.setClearColor('#000');
+    newRenderer.setClearColor('#999');
     newRenderer.setSize(width, height);
     setRenderer(newRenderer);
 
@@ -69,6 +82,12 @@ function useThreeScene(mountPoint) {
     const newCube = new Mesh(geometry, material);
 
     setCube(newCube);
+
+    // Add loader for OBJ filetype
+    const newLoader = new THREE.OBJLoader();
+    // const newLoader = FBXLoader();
+
+    setLoader(newLoader);
   }, [mountPoint]);
 
   useEffect(() => {
@@ -81,6 +100,13 @@ function useThreeScene(mountPoint) {
     // Add cube
     scene.add(cube);
 
+    // Add character
+    loader.load(OBJ, obj => {
+      obj.translateY(-2);
+      obj.scale.set(0.5, 0.5, 0.5);
+      scene.add(obj);
+    });
+
     // Start animation effect
     start();
 
@@ -89,7 +115,7 @@ function useThreeScene(mountPoint) {
       stop();
       mountPoint.current.removeChild(renderer.domElement);
     };
-  }, [cube, renderer, scene]);
+  }, [cube, loader, renderer, scene]);
 }
 
 export { useThreeScene };

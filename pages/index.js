@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useRef } from 'react';
 import styled from 'styled-components';
 import { useThreeScene } from '../utils/hooks';
@@ -14,6 +15,10 @@ function Home() {
 
   return (
     <>
+      <Head>
+        <title>3D App</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <header>
         <h1>It works</h1>
       </header>
